@@ -10,7 +10,42 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\about.html" />
+    <None Include="wwwroot\assets\css\bootstrap-theme.css" />
+    <None Include="wwwroot\assets\css\bootstrap.min.css" />
+    <None Include="wwwroot\assets\css\font-awesome.min.css" />
+    <None Include="wwwroot\assets\css\main.css" />
+    <None Include="wwwroot\assets\fonts\fontawesome-webfont.eot" />
+    <None Include="wwwroot\assets\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\assets\fonts\fontawesome-webfont.ttf" />
+    <None Include="wwwroot\assets\fonts\fontawesome-webfont.woff" />
+    <None Include="wwwroot\assets\fonts\FontAwesome.otf" />
+    <None Include="wwwroot\assets\images\1.jpg" />
+    <None Include="wwwroot\assets\images\2.jpg" />
+    <None Include="wwwroot\assets\images\bg_header.jpg" />
+    <None Include="wwwroot\assets\images\gt_favicon.png" />
+    <None Include="wwwroot\assets\images\mac.jpg" />
+    <None Include="wwwroot\assets\images\online-course.png" />
+    <None Include="wwwroot\assets\images\online-learning.png" />
+    <None Include="wwwroot\assets\js\google-map.js" />
+    <None Include="wwwroot\assets\js\headroom.min.js" />
+    <None Include="wwwroot\assets\js\html5shiv.js" />
+    <None Include="wwwroot\assets\js\jQuery.headroom.min.js" />
+    <None Include="wwwroot\assets\js\respond.min.js" />
+    <None Include="wwwroot\assets\js\template.js" />
+    <None Include="wwwroot\contact.html" />
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\README.md" />
+    <None Include="wwwroot\sidebar-left.html" />
+    <None Include="wwwroot\sidebar-right.html" />
+    <None Include="wwwroot\signin.html" />
+    <None Include="wwwroot\signup.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
