@@ -41,5 +41,15 @@ namespace WebStore.Data
             IMongoCollection<T> collection = this._database.GetCollection<T>(GetTableName<T>());
             return await collection.Find(Builders<T>.Filter.Empty).ToListAsync();
         }
+
+        public  bool GetUser( UserModel model) 
+		{
+            IMongoCollection<UserModel> collection = this._database.GetCollection<UserModel>(GetTableName<UserModel>());
+			if (collection.Find(d => d.Nickname.Equals(model.Nickname) && d.Password.Equals(model.Password, StringComparison.Ordinal)).Any())
+			{
+                return true;
+			}
+            return false;
+        }
     }
 }

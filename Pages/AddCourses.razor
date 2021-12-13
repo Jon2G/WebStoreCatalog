@@ -109,6 +109,15 @@
                                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.PriceCheck" />
                         </div>
                     </p>
+                     <p>
+                        <div class="top-margin">
+                            <label>Calificación<span class="text-danger">*</span></label>
+                            <MudTextField Variant="Variant.Outlined" @bind-Value="@Course.Assessment" Required="true" FullWidth="true" Style="font-size: 18px"
+                                          Placeholder="Calificación del curso" RequiredError="Debe ingresar una calificación para el curso" ErrorText="Formato no valido"
+                                           />
+                        </div>
+                    </p>
+                     
                     <MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" StartIcon="@Icons.Material.Filled.Save" OnClick="@Save">Confirmar</MudButton>
 
 

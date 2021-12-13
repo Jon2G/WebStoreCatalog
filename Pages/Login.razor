@@ -1,12 +1,10 @@
 ﻿@page "/Login"
+@using WebStore.Models
+@using WebStore.Data
 <body>
 	<Header/>
 
 		<div class="container add-padding">
-		<ol class="breadcrumb">
-			<li><a href="/">Home</a></li>
-			<li class="active">User access</li>
-		</ol>
 
 		<div class="row">
 			
@@ -26,24 +24,38 @@
 							<form>
 								<div class="top-margin">
 									<label>Usuario <span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
+									 <MudTextField Variant="Variant.Outlined" @bind-Value="@user.Nickname" Required="true" FullWidth="true" Style="font-size: 14px"
+                                          Placeholder="Usuario" RequiredError="Debe ingresar su usuario"  />
 								</div>
 								<div class="top-margin">
 									<label>Contraseña <span class="text-danger">*</span></label>
-									<input type="password" class="form-control">
+									 <MudTextField Variant="Variant.Outlined" @bind-Value="@user.Password" Required="true" FullWidth="true" Style="font-size: 14px"
+                                          Placeholder="Password" RequiredError="Debe ingresar su contraseña"  />
 								</div>
 
 								<hr>
 
 								<div class="row">
-										<div class="col-lg-4 text-right">
-										<button class="btn btn-action" type="submit">Ingresar</button>
+										<div class="col-lg-12 text-right">
+										<MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@LogIn" StartIcon="@Icons.Material.Filled.Check">Ingresar</MudButton>
 									</div>
 								</div>
 							</form>
+
 						</div>
 					</div>
-
+					 <MudPopover Open="@IsOpen" Fixed="true" Class="px-4 pt-4">
+                        <MudCardHeader Style="font-size: 18px;">
+                            Los siguientes campos son incorrectos:
+                        </MudCardHeader>
+                        <div class="d-flex flex-column">
+                            @foreach (string error in Errors)
+                            {
+                                <MudText Style="font-size: 16px;" Color="Color.Error">@error</MudText>
+                            }
+                            <MudButton Style="font-size: 16px;" OnClick="@(() => ToggleOpen(false))" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                        </div>
+                    </MudPopover>
 				</div>
 				
 			</article>
@@ -54,5 +66,44 @@
 </body>
 
 @code {
+	[Inject]
+	private MongoDb Db { get; set; }
+	private string[] Errors;
 
+	[Parameter]
+	public UserModel user { get; set; }
+
+	private bool IsOpen;
+
+	public Login()
+	{
+	}
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+		user = user ?? new UserModel();
+	}
+
+	private async Task LogIn(MouseEventArgs obj)
+	{
+		await Task.Yield();
+		if (user.Validate(out Errors))
+		{
+			if( await user.Find(this.Db))
+			{
+				
+			}
+		}
+        else
+        {
+            ToggleOpen(true);
+        }
+
+    }
+	private void ToggleOpen(bool isOpen)
+    {
+        IsOpen = isOpen;
+        StateHasChanged();
+    }
 }

@@ -85,6 +85,10 @@ namespace WebStore.Models
             {
                 internalErrors.Add("El descuento no puede ser mayor al 100%");
             }
+            if (Assessment < 0 || Assessment > 5)
+            {
+                internalErrors.Add("La calificacion no puede ser menor a cero ni mayor a cinco");
+            }
             errors = internalErrors.ToArray();
             return !errors.Any();
         }

@@ -1,68 +1,103 @@
 ﻿@page "/Register"
+@using WebStore.Models
+@using WebStore.Data
 <body>
-	<Header/>
+    <Header />
     <div class="container add-padding">
 
-		<ol class="breadcrumb">
-			<li><a href="/">Home</a></li>
-			<li class="active">Registration</li>
-		</ol>
+        <div class="row">
 
-		<div class="row">
-			
-			<!-- Article main content -->
-			<article class="col-xs-12 maincontent">
-				<header class="page-header">
-					<h1 class="page-title">Registrarse</h1>
-				</header>
-				
-				<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<h3 class="thin text-center">Crear nueva cuenta</h3>
-							<p class="text-center text-muted"><a href="/Login">Ingresar</a> </p>
-							<hr>
+            <!-- Article main content -->
+            <article class="col-xs-12 maincontent">
+                <header class="page-header">
+                    <h1 class="page-title">Registrarse</h1>
+                </header>
 
-							<form>
-								<div class="top-margin">
-									<label>Nombre</label>
-									<input type="text" class="form-control">
-								</div>
-								<div class="top-margin">
-									<label>Usuario <span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
-								</div>
+                <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 class="thin text-center">Crear nueva cuenta</h3>
+                            <p class="text-center text-muted"><a href="/Login">Ingresar</a> </p>
+                            <hr>
 
-								<div class="row top-margin">
-									<div class="col-sm-6">
-										<label>Contraseña <span class="text-danger">*</span></label>
-										<input type="text" class="form-control">
-									</div>
-									<div class="col-sm-6">
-										<label>Confirmar Contraseña <span class="text-danger">*</span></label>
-										<input type="text" class="form-control">
-									</div>
-								</div>
+                            <form>
+                                <div class="top-margin">
+                                    <label>Nombre</label>
+                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Name" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                  Placeholder="Nombre" RequiredError="Debe ingresar su nombre" />
+                                </div>
+                                <div class="top-margin">
+                                    <label>Usuario <span class="text-danger">*</span></label>
+                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Nickname" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                  Placeholder="Usuario" RequiredError="Debe ingresar un usuario" />
+                                </div>
 
-								<hr>
+                                <div class="row top-margin">
+                                    <div class="col-sm-6">
+                                        <label>Contraseña <span class="text-danger">*</span></label>
+                                        <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Password" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                      Placeholder="Contraseña" RequiredError="Debe ingresar una contraseña" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label>Confirmar Contraseña <span class="text-danger">*</span></label>
+                                        <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.ConfirPassword" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                      Placeholder="Contraseña" RequiredError="Debe confirmar su contraseña" />
+                                    </div>
+                                </div>
 
-								<div class="row">
-									<div class="col-lg-4 text-right">
-										<button class="btn btn-action" type="submit">Registrarse</button>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
+                                <hr>
 
-				</div>
-				
-			</article>
-			<!-- /Article -->
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@Model.Save" StartIcon="@Icons.Material.Filled.Check">Registrarse</MudButton>
+                                    </div>
+                                </div>
 
-		</div>
-	</div>	<!-- /container -->
+                            </form>
+                        </div>
+                    </div>
+                    <MudPopover Open="@Model.IsOpen" Fixed="true" Class="px-4 pt-4">
+                        <MudCardHeader Style="font-size: 18px;">
+                            Los siguientes campos son incorrectos:
+                        </MudCardHeader>
+                        <div class="d-flex flex-column">
+                            @foreach (string error in Model.Errors)
+                            {
+                                <MudText Style="font-size: 16px;" Color="Color.Error">@error</MudText>
+                            }
+                            <MudButton Style="font-size: 16px;" OnClick="@(() =>Model.ToggleOpen(false,this))" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                        </div>
+                    </MudPopover>
+                </div>
+
+            </article>
+            <!-- /Article -->
+
+        </div>
+    </div>	<!-- /container -->
 </body>
 @code {
+    [Inject]
+    private MongoDb Db { get; set; }
+   
+
+
+    [Parameter]
+    public UserModel User { get => Model.User; set => Model.User = value; }
+
+ 
+
+    public RegisterViewModel Model { get; set; }
+
+    public Register()
+    {
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Model.User = Model.User ?? new UserModel();
+    }
+
 
 }
