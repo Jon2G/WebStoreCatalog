@@ -1,0 +1,50 @@
+﻿@page "/Courses"
+@using WebStore.Models
+<body>
+    <Header />
+
+    <div class="container add-padding">
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">User access</li>
+        </ol>
+
+        <div class="row">
+
+            <!-- Article main content -->
+            <article class="col-xs-12 maincontent">
+                <header class="page-header">
+                    <h1 class="page-title">Sign in</h1>
+                </header>
+                
+                @foreach (Course course in Courses)
+                {
+                    <CourseView Course="course"/>
+                }
+
+            </article>
+            <!-- /Article -->
+
+        </div>
+    </div>	<!-- /container -->
+</body>
+
+
+
+@code {
+    private readonly List<Course> Courses;
+
+    public CoursesPage()
+    {
+        Courses = new List<Course>();
+        for (int i = 0; i < 100; i++)
+        {
+            Courses.Add(      new Course("Mastering Visual Studio Code",
+                729,
+                "Why use one tool for your HTML and CSS, one for your back-end development and another one for course control, when you can have everything you need in one single, fast and beautiful program: Visual Studio Code."
+                ,null,50,4,DateTime.Today));
+      
+        }
+    }
+}
+
