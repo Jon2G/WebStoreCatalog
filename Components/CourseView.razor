@@ -3,32 +3,41 @@
 
 
 
-<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-    <div class="panel panel-default">
+<div class="row-cols-3">
+    <div class="col-md-4">
+        <div class="panel panel-default">
 
-        <MudCard Elevation="10">
-            <MudCardHeader>
-                <img src="https://1.bp.blogspot.com/-IaCcki7fyt0/YCnYEfuOk4I/AAAAAAAAHio/PjW2O_WtS_wrP6xB42sNbsZsk-grC5IKwCLcBGAsYHQ/s0/Promocion-explora-las-posibilidades-udemy-2021-02.png"/>
-            </MudCardHeader>
-            <div class="panel-body">
-                <article class="col-sm-12 maincontent" style="display: block">
-                   
-                    <label style="color: black; font-size: 18px">@Course.Name</label>
-                    <label style="font-size: 15px">@Course.Description</label>
-                    <MudRating Size="Size.Large" ReadOnly="true" @bind-SelectedValue="Course.Assessment"/>
-                    <br/>
-                    <div>
-                        <label style="font-size: 18px; color: black">@Course.FinalPrice.ToString("C2")</label>
-                        &nbsp;
-                        <label style="font-size: 18px;"><strike>@Course.Price.ToString("C2")</strike></label>
-                        
-                    </div>
+            <MudCard Elevation="10">
 
-                </article>
-            </div>
-        </MudCard>
+                <MudCardMedia Image="https://1.bp.blogspot.com/-IaCcki7fyt0/YCnYEfuOk4I/AAAAAAAAHio/PjW2O_WtS_wrP6xB42sNbsZsk-grC5IKwCLcBGAsYHQ/s0/Promocion-explora-las-posibilidades-udemy-2021-02.png"
+                              Height="200"/>
+              
+                <div class="panel-body">
+                    <article class="col-sm-12 maincontent" style="display: block">
 
-
+                        <label style="color: black; font-size: 18px">@Course.Name</label>
+                        <label style="font-size: 15px">@Course.Description</label>
+                        <MudRating Size="Size.Large" ReadOnly="true" @bind-SelectedValue="Course.Assessment"/>
+                        <br/>
+                        @if (Course.IsFree)
+                        {
+                            <label style="font-size: 18px; color: darkgreen">GRATIS</label>
+                        }
+                        else
+                        {
+                            <div>
+                                <label style="font-size: 18px; color: black">@Course.FinalPrice.ToString("C2")</label>
+                                &nbsp;
+                                @if (Course.HasDiscount)
+                                {
+                                    <label style="font-size: 18px;"><strike>@Course.Price.ToString("C2")</strike></label>
+                                }
+                            </div>
+                        }
+                    </article>
+                </div>
+            </MudCard>
+        </div>
     </div>
 </div>
 @code {

@@ -1,32 +1,27 @@
 ﻿@page "/Courses"
 @using WebStore.Models
+@using WebStore.Data
+@using AsyncAwaitBestPractices
+
 <body>
     <Header />
 
     <div class="container add-padding">
-        <ol class="breadcrumb">
-            <li><a href="/">Home</a></li>
-            <li class="active">User access</li>
-        </ol>
-
         <div class="row">
-
+            <br>
             <!-- Article main content -->
             <article class="col-xs-12 maincontent">
                 <header class="page-header">
-                    <h1 class="page-title">Sign in</h1>
+                    <h1 class="page-title">Cursos</h1>
                 </header>
-                
+
                 @foreach (Course course in Courses)
                 {
-                    <CourseView Course="course"/>
+                    <CourseView Course="course" />
                 }
-
             </article>
-            <!-- /Article -->
-
         </div>
-    </div>	<!-- /container -->
+    </div>
 </body>
 
 
@@ -34,17 +29,20 @@
 @code {
     private readonly List<Course> Courses;
 
-    public CoursesPage()
+    public CoursesPage() : this(new MongoDb())
+    {
+
+    }
+    public CoursesPage(MongoDb db)
     {
         Courses = new List<Course>();
-        for (int i = 0; i < 100; i++)
+        Course.GetAll(db).ContinueWith((Task<List<Course>> t) =>
         {
-            Courses.Add(      new Course("Mastering Visual Studio Code",
-                729,
-                "Why use one tool for your HTML and CSS, one for your back-end development and another one for course control, when you can have everything you need in one single, fast and beautiful program: Visual Studio Code."
-                ,null,50,4,DateTime.Today));
-      
-        }
+            Courses.AddRange(t.Result);
+            this.InvokeAsync(StateHasChanged);
+        }).SafeFireAndForget();
     }
+
+
 }
 

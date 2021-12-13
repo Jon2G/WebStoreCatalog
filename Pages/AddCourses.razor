@@ -1,91 +1,245 @@
 ﻿@page "/AddCourses"
 @using WebStore.Models
-<body  class="home">
-	<!-- Fixed navbar -->
-	
-	<!-- /.navbar -->
+@using System.Text
+@using AsyncAwaitBestPractices
+@using MudBlazor
+@using System.Security.Cryptography.X509Certificates
+@using WebStore.Data
+<body class="home">
+    <!-- Fixed navbar -->
+    <!-- /.navbar -->
+    <Header />
+    <br />
+    <br />
+    <!-- container -->
+    <div class="add-padding">
+        <br />
+        <div class="col-sm-3"></div>
+        <article class="col-sm-6">
 
-	<Header/>
+            <header class="page-header">
+                <h1 class="page-title">Agregar nuevo curso</h1>
+            </header>
+            <p>
+                <div>
+                    <p>
+                        <div class="top-margin">
+                            <label style="display: block">Nombre del curso:<span class="text-danger">*</span></label>
 
-	<!-- container -->
-	<div class="container add-padding">
+                            <MudTextField Variant="Variant.Outlined" @bind-Value="@Course.Name" Required="true" FullWidth="true" Style="font-size: 18px"
+                                          Placeholder="Nombre del curso" RequiredError="Debe ingresar un nombre para el curso" />
+                        </div>
+                    </p>
+                    <p>
+                        <div class="top-margin">
+                            <label style="display: block"> Descripción:<span class="text-danger">*</span></label>
+                            <MudTextField Variant="Variant.Outlined" @bind-Value="@Course.Description" Required="true" FullWidth="true" Style="font-size: 18px"
+                                          Placeholder="Descripción del curso" RequiredError="Debe ingresar una descripción para el curso" Lines="3" />
+                        </div>
+                    </p>
+                    <p>
+                        <div class="top-margin">
+                            <label style="display: block">Precio del curso:<span class="text-danger">*</span></label>
+                            <MudTextField Variant="Variant.Outlined" @bind-Value="@Course.Price" Required="true" FullWidth="true" Style="font-size: 18px"
+                                          Placeholder="Precio del curso" RequiredError="Debe ingresar un precio para el curso" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+                        </div>
+                    </p>
+                    <p>
+                        <div class="top-margin">
+                            <label style="display: block">Ingresa imagenes para el curso<span class="text-danger">*</span></label>
+                            <div class="row">
+                                <div class="col-12 p-0">
 
-		<ol class="breadcrumb">
-			<li><a href="/">Home</a></li>
-			<li class="active">About</li>
-		</ol>
-
-		<div class="row">
-			
-			<!-- Article main content -->
-			<article class="col-sm-4 maincontent">
-				<header class="page-header">
-					<h1 class="page-title">Agregar nuevo curso</h1>
-				</header>
-				<p>
-					<div>
-						<p>
-							<div class="top-margin">
-									<label>Nombre del curso <span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
-								</div>
-						</p>
-						<p>
-							<div class="top-margin">
-									<label>Costo del curso <span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
-								</div>
-						</p>
-						<p>
-							<div class="top-margin">
-									<label>Descripcion<span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
-								</div>
-						</p>
-						<p>
-							<div class="top-margin">
-									<label>Ingresa imagenes para el curso<span class="text-danger">*</span></label>
-									<InputFile OnChange="OnInputFileChange" multiple />
-									<div class="card" style="width:30rem;">
-										<div class="card-body">
-											<img class="rounded m-1" src="@imageDataFile" />
-										</div>
-									</div>
-								</div>
-							
-						</p>
-						<p>
-							<div class="top-margin">
-									<label>Descuento<span class="text-danger">*</span></label>
-									<input type="text" class="form-control">
-								</div>
-						</p>
-						<button class="btn btn-action" type="submit">Confirmar</button>
-					</div>
-
-				</p>
-			</article>
+                                    @if (selectedFile is null)
+                                    {
+                                        <div class="dropzone @dropClass rounded">
+                                            <BlazorInputFile.InputFile id="fileInput"
+                                                                   accept="image/png,image/gif,image/jpeg"
+                                                                   OnChange="(f => HandleFileInputChange(f).SafeFireAndForget())"
+                                                                   @ondragenter="HandleDragEnter"
+                                                                   @ondragleave="HandleDragLeave" />
+                                            Subir una imagen
+                                        </div>
+                                    }
 
 
-		</div>
-	</div>	
+
+
+
+                                    @if ((fileTypeError || fileSizeError))
+                                    {
+                                        <ul class="validation-errors mb-0">
+                                            @if (fileTypeError)
+                                            {
+                                                <li class="validation-message">Solo se aceptan imagenes.</li>
+                                            }
+                                            @if (fileSizeError)
+                                            {
+                                                <li class="validation-message">El tamaño máximo por imagen son @MaxFileSizeMB MB.</li>
+                                            }
+                                        </ul>
+                                    }
+                                    @if (selectedFile is not null)
+                                    {
+                                        <div class="col-12">
+                                            <ul>
+
+                                                <li>
+                                                    <img class="rounded m-1" src="@imageDataFile" /><br />
+                                                    @selectedFile.Name
+                                                    <button class="btn btn-link text-danger p-0 pl-1" type="button"
+                                                        @onclick="@(e => RemoveFile())">
+                                                        <small class="align-text-bottom">Remove</small>
+                                                    </button>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </p>
+                    <p>
+                        <div class="top-margin">
+                            <label>Descuento<span class="text-danger">*</span></label>
+                            <MudTextField Variant="Variant.Outlined" @bind-Value="@Course.Off" Required="true" FullWidth="true" Style="font-size: 18px"
+                                          Placeholder="Descuento del curso" RequiredError="Debe ingresar un descuento para el curso" ErrorText="Formato no valido"
+                                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.PriceCheck" />
+                        </div>
+                    </p>
+                    <MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" StartIcon="@Icons.Material.Filled.Save" OnClick="@Save">Confirmar</MudButton>
+
+
+                    <MudPopover Open="@IsOpen" Fixed="true" Class="px-4 pt-4">
+                        <MudCardHeader Style="font-size: 18px;">
+                            Los siguientes campos son incorrectos:
+                        </MudCardHeader>
+                        <div class="d-flex flex-column">
+                            @foreach (string error in Errors)
+                            {
+                                <MudText Style="font-size: 16px;" Color="Color.Error">@error</MudText>
+                            }
+                            <MudButton Style="font-size: 16px;" OnClick="@(() => ToggleOpen(false))" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                        </div>
+                    </MudPopover>
+                </div>
+
+            </p>
+
+        </article>
+        <div class="col-sm-3"></div>
+    </div>
 </body>
 @code {
 
-    private string imageDataFile="";
-    private string name,description;
-    private int cost, off;
-    private Course course;
-    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    [Inject]
+    private MongoDb Db { get; set; }
+    private IJSRuntime JsRuntime { get; set; }
+    const int MaxFileSizeMB = 5;
+    const int MaxFileSize = MaxFileSizeMB * 1024 * 1024; // 5MB
+    private string dropClass = "";
+    private bool fileSizeError = false;
+    private bool fileTypeError = false;
+    private IFileListEntry selectedFile;
+
+    private string imageDataFile = "";
+    private string[] Errors;
+    [Parameter]
+    public Course Course { get; set; }
+
+    private bool IsOpen;
+
+    public AddCourses()
     {
-        var maxFile = 3;
-        var format = "image/png";
-        foreach(var imageFile in e.GetMultipleFiles())
+
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Course = Course ?? new Course();
+    }
+
+    private void HandleDragEnter()
+    {
+        dropClass = "dropzone-drag";
+    }
+
+    private void HandleDragLeave()
+    {
+        dropClass = "";
+    }
+
+    private async Task HandleFileInputChange(IFileListEntry[] files)
+    {
+        await Task.Yield();
+        dropClass = "";
+        fileSizeError = false;
+        fileTypeError = false;
+        List<string> acceptedFileTypes = new List<string>() { "image/png", "image/jpeg", "image/gif" };
+
+        var file = files.First();
+
+        bool error = false;
+        if (file.Size > MaxFileSize)
         {
-            var resizeFile = await imageFile.RequestImageFileAsync(format,200,200);
-            var buffer = new byte[resizeFile.Size];
-            await resizeFile.OpenReadStream().ReadAsync(buffer); 
-             imageDataFile = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            error = true;
+            fileSizeError = true;
+        }
+
+        if (!acceptedFileTypes.Contains(file.Type))
+        {
+            error = true;
+            fileTypeError = true;
+        }
+
+        //keep the good files
+        if (!error)
+        {
+            selectedFile = file;
+            selectedFile = await selectedFile.ToImageFileAsync("image/png", 200, 200);
+            var buffer = new byte[selectedFile.Size];
+            StringBuilder base64 = new StringBuilder("data:png;base64,");
+            using (Stream stream = selectedFile.Data)
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    await stream.CopyToAsync(memoryStream);
+                    Course.Image = memoryStream.ToArray();
+                    base64.Append(Convert.ToBase64String(Course.Image));
+                    imageDataFile = base64.ToString();
+                    StateHasChanged();
+                }
+            }
         }
     }
+
+
+    private void RemoveFile()
+    {
+        selectedFile = null;
+    }
+
+    private async Task Save(MouseEventArgs obj)
+    {
+        await Task.Yield();
+        if (Course.Validate(out Errors))
+        {
+            Course = await Course.Save(this.Db);
+        }
+        else
+        {
+            ToggleOpen(true);
+        }
+
+    }
+
+    private void ToggleOpen(bool isOpen)
+    {
+        IsOpen = isOpen;
+        StateHasChanged();
+    }
+
 }
