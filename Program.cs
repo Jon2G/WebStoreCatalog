@@ -5,12 +5,13 @@ using MudBlazor.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("https://25.17.178.128:5090");
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
-builder.Services.AddSingleton<MongoDb>((s)=>new MongoDb());
+builder.Services.AddSingleton<MongoDb>((s) => new MongoDb());
 
 var app = builder.Build();
 
