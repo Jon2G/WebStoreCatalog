@@ -1,9 +1,7 @@
 ﻿@using WebStore.Models
 @using System.Diagnostics.CodeAnalysis
 @using WebStore.Data
-
-
-
+@inject NavigationManager NavigationManager
 <div class="row-cols-3">
     <div class="col-md-4">
         <div class="panel panel-default">
@@ -35,6 +33,12 @@
                                 }
                             </div>
                         }
+                        @if(AppData.IsLogedIn)
+                        {
+                             <div style="text-align: right;width:220px">
+                             <MudButton StartIcon="@Icons.Material.Filled.Edit" Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Warning" OnClick="@(()=>EditCourse(this.Course))" />
+                             </div>
+                        }
                     </article>
                 </div>
             </MudCard>
@@ -45,5 +49,8 @@
     [Parameter, NotNull]
     public Course Course { get; set; }
 
-
+    public void EditCourse(Course course)
+    {
+        NavigationManager.NavigateTo($"/AddCourses/{course.Id}");
+    }
 }

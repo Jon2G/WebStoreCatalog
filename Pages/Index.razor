@@ -1,5 +1,7 @@
 ﻿@page "/"
-
+@page "/Index"
+@using WebStore.Models
+@using WebStore.Data;
 <PageTitle>Index</PageTitle>
 <body class="home">
 <Header/>
@@ -11,7 +13,7 @@
 			<div class="row">
 				<h1 class="lead">UdemyFree</h1>
 				<br/>
-				<p><a class="btn btn-default btn-lg" role="button" href="/Courses">VER CURSOS</a> <a class="btn btn-action btn-lg" role="button" href="/Contact">CONTACTO</a></p>
+				<p><a class="btn btn-default btn-lg" role="button" href="/Courses">VER CURSOS</a></p>
 			</div>
 		</div>
 	</header>
@@ -34,19 +36,19 @@
 				<div class="col-md-3 col-sm-6 highlight">
 					<div class="h-caption"><h4><i class="fa fa-cogs fa-5"></i>Misión</h4></div>
 					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque aliquid adipisci aspernatur. Soluta quisquam dignissimos earum quasi voluptate. Amet, dignissimos, tenetur vitae dolor quam iusto assumenda hic reprehenderit?</p>
+						<p>@InfoPage.Mision</p>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 highlight">
 					<div class="h-caption"><h4><i class="fa fa-eye fa-5"></i>Visión</h4></div>
 					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores, commodi, sequi quis ad fugit omnis cumque a libero error nesciunt molestiae repellat quos perferendis numquam quibusdam rerum repellendus laboriosam reprehenderit! </p>
+						<p>@InfoPage.Vision</p>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-6 highlight">
 					<div class="h-caption"><h4><i class="fa fa-bullseye fa-5"></i>Objetivos</h4></div>
 					<div class="h-body text-center">
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem, vitae, perferendis, perspiciatis nobis voluptate quod illum soluta minima ipsam ratione quia numquam eveniet eum reprehenderit dolorem dicta nesciunt corporis?</p>
+						<p>@InfoPage.Target</p>
 					</div>
 				</div>
 			</div> <!-- /row  -->
@@ -72,6 +74,12 @@
 	</section>
 	<!-- /social links -->
 
-
 </body>
 
+@code{
+	public static InfoPageModel InfoPage { get; set; }
+	public Index()
+	{
+		InfoPage = InfoPageModel.Get();
+	}
+}

@@ -1,23 +1,44 @@
-﻿
+﻿@inject NavigationManager NavigationManager
 <div class="navbar navbar-inverse navbar-fixed-top headroom" >
 		<div class="container">
 			<div class="navbar-header">
 				<!-- Button for smallest screens -->
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-				<a class="navbar-brand" href="index.html" style="display:inline-flex;"><img src="assets/images/online-learning.png" 
-					alt="Progressus HTML5 template" style="height: 40px;margin: auto;">&nbsp<h4>UdemyFree</h4></a>
+				<a class="navbar-brand" href="/Index" style="display:inline-flex;"><img src="assets/images/online-learning.png" 
+					alt="Progressus HTML5 template" style="height: 40px;margin: auto;">&nbsp<h4>Courses Store</h4></a>
 			</div>
 			<div class="navbar-collapse collapse">
 				<ul class="nav navbar-nav pull-right">
 					<li class="active"><a href="/">Home</a></li>
-					<li ><a href="/AddCourses">Agregar Curso</a></li>
-					<li><a href="/Contact">Contacto</a></li>
-					<li><a class="btn" href="/Login">Ingresar / Registrar</a></li>
+					@if(AppData.IsLogedIn)
+					{
+						<li  ><a href="/AddCourses">Agregar Curso</a></li>
+					}
+					@if (AppData.IsLogedIn)
+					{
+						<li><a href="/Register">Registar usuario</a></li>
+					}
+					@if (AppData.IsLogedIn)
+					{
+						<li><a href="/InfoPage">Editar información</a></li>
+					}
+					@if(!AppData.IsLogedIn)
+					{
+						<li><a class="btn" href="/Login">Ingresar</a></li>
+					}
+
+					@if (AppData.IsLogedIn)
+					{
+						<li onclick="@OutSesion"><a class="btn">Cerrar sesion</a></li>
+					}
 				</ul>
 			</div><!--/.nav-collapse -->
 		</div>
 	</div> 
 @code {
-
+    public void OutSesion() {
+		AppData.User =null;
+		NavigationManager.NavigateTo("/");
+	}
 }

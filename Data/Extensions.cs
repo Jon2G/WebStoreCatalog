@@ -5,19 +5,18 @@ namespace WebStore.Data
 {
     public static class Extensions
     {
-        public static async Task<string> ToImage64(this Stream selectedFileData)
+        public static async Task<byte[]> ToArray(this Stream selectedFileData)
         {
-            StringBuilder base64 = new StringBuilder("data:png;base64,");
             using (Stream stream = selectedFileData)
             {
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
                     await stream.CopyToAsync(memoryStream);
-                    byte[] data = memoryStream.ToArray();
-                    return data.ToImage64();
+                    return memoryStream.ToArray();
                 }
             }
         }
+
         public static string ToImage64(this byte[] data)
         {
             StringBuilder base64 = new StringBuilder("data:png;base64,");

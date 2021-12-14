@@ -8,11 +8,11 @@ namespace WebStore.Models
     [Table("Users")]
     public class UserModel : IMongoId
     {
-       
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        [BsonElement ("Name")]
+        [BsonElement("Name")]
         public string Name { get; set; }
         [BsonElement("Nickname")]
         public string Nickname { get; set; }
@@ -23,9 +23,9 @@ namespace WebStore.Models
         {
 
         }
-        public UserModel(string Name,string Nickname,string Password)
+        public UserModel(string Name, string Nickname, string Password)
         {
-            
+
             this.Name = Name;
             this.Nickname = Nickname;
             this.Password = Password;
@@ -34,9 +34,9 @@ namespace WebStore.Models
         {
             return db.Save(this);
         }
-        public async Task<bool> Find(MongoDb db)
-		{
-            return db.GetUser(this);
-		}
+        public static UserModel LogIn(MongoDb db, string nickName, string password)
+        {
+            return db.Find<UserModel>(x=> x.Nickname == nickName && x.Password == password);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
 using System.Reflection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -38,18 +39,18 @@ namespace WebStore.Data
 
         public async Task<List<T>> GetAllAsync<T>() where T : IMongoId
         {
-            IMongoCollection<T> collection = this._database.GetCollection<T>(GetTableName<T>());
+            IMongoCollection<T> collection = GetCollection<T>();
             return await collection.Find(Builders<T>.Filter.Empty).ToListAsync();
         }
+        public IMongoCollection<T> GetCollection<T>() where T : IMongoId
+        {
+            return this._database.GetCollection<T>(GetTableName<T>());
+        }
 
-        public  bool GetUser( UserModel model) 
-		{
-            IMongoCollection<UserModel> collection = this._database.GetCollection<UserModel>(GetTableName<UserModel>());
-			if (collection.Find(d => d.Nickname.Equals(model.Nickname) && d.Password.Equals(model.Password, StringComparison.Ordinal)).Any())
-			{
-                return true;
-			}
-            return false;
+        public T Find<T>(Expression<Func<T, bool>> predicate) where T : IMongoId
+        {
+            IFindFluent<T, T> result = GetCollection<T>().Find(predicate);
+            return result.FirstOrDefault();
         }
     }
 }

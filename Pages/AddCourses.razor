@@ -1,10 +1,12 @@
 ﻿@page "/AddCourses"
+@page "/AddCourses/{JsonCourse}"
 @using WebStore.Models
 @using System.Text
 @using AsyncAwaitBestPractices
 @using MudBlazor
 @using System.Security.Cryptography.X509Certificates
 @using WebStore.Data
+@inject NavigationManager NavigationManager
 <body class="home">
     <!-- Fixed navbar -->
     <!-- /.navbar -->
@@ -112,8 +114,7 @@
                     <p>
                         <div class="top-margin">
                             <label>Calificación<span class="text-danger">*</span></label>
-                            <MudTextField Variant="Variant.Outlined" @bind-Value="@Course.Assessment" Required="true" FullWidth="true" Style="font-size: 18px"
-                                          Placeholder="Calificación del curso" RequiredError="Debe ingresar una calificación para el curso" ErrorText="Formato no valido" />
+                             <MudRating Size="Size.Large" @bind-SelectedValue="@Course.Assessment"/>
                         </div>
                     </p>
 
@@ -155,6 +156,7 @@
     private string imageDataFile = "";
     private string[] Errors;
     [Parameter]
+    public string JsonCourse { get; set; }
     public Course Course { get; set; }
 
     private bool IsOpen;
@@ -167,6 +169,13 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        if (!string.IsNullOrEmpty(JsonCourse))
+        {
+            Course = this.Db.Find<Course>(x => x.Id == JsonCourse);
+            this.imageDataFile = Course.Image.ToImage64();
+            selectedFile = new FileListEntry(Course.Image);
+            StateHasChanged();
+        }
         Course = Course ?? new Course();
     }
 
@@ -208,7 +217,8 @@
         {
             selectedFile = file;
             selectedFile = await selectedFile.ToImageFileAsync("image/png", 200, 200);
-            imageDataFile = await selectedFile.Data.ToImage64();
+            Course.Image = await selectedFile.Data.ToArray();
+            imageDataFile =  Course.Image.ToImage64();
             StateHasChanged();
 
         }
@@ -217,6 +227,7 @@
 
     private void RemoveFile()
     {
+        Course.Image = null;
         selectedFile = null;
     }
 
@@ -226,6 +237,7 @@
         if (Course.Validate(out Errors))
         {
             Course = await Course.Save(this.Db);
+            NavigationManager.NavigateTo("/");
         }
         else
         {

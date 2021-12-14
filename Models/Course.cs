@@ -89,8 +89,16 @@ namespace WebStore.Models
             {
                 internalErrors.Add("La calificacion no puede ser menor a cero ni mayor a cinco");
             }
+            if (Image is null)
+            {
+                internalErrors.Add("La imagen del curso no debe estar vacía");
+            }
             errors = internalErrors.ToArray();
             return !errors.Any();
+        }
+        public override string ToString()
+        {
+            return System.Text.Json.JsonSerializer.Serialize(this);
         }
     }
 }

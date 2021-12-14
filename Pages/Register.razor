@@ -37,12 +37,12 @@
                                     <div class="col-sm-6">
                                         <label>Contraseña <span class="text-danger">*</span></label>
                                         <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Password" Required="true" FullWidth="true" Style="font-size: 14px"
-                                                      Placeholder="Contraseña" RequiredError="Debe ingresar una contraseña" />
+                                                      Placeholder="Contraseña" RequiredError="Debe ingresar una contraseña"  InputType="InputType.Password" />
                                     </div>
                                     <div class="col-sm-6">
                                         <label>Confirmar Contraseña <span class="text-danger">*</span></label>
                                         <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.ConfirPassword" Required="true" FullWidth="true" Style="font-size: 14px"
-                                                      Placeholder="Contraseña" RequiredError="Debe confirmar su contraseña" />
+                                                      Placeholder="Contraseña" RequiredError="Debe confirmar su contraseña"  InputType="InputType.Password" />
                                     </div>
                                 </div>
 

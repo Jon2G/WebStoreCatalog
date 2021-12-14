@@ -2,6 +2,7 @@
 @using WebStore.Models
 @using WebStore.Data
 @implements IPage
+@inject NavigationManager NavigationManager
 <body>
     <Header />
 
@@ -19,26 +20,25 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h3 class="thin text-center">Ingresar con tu cuenta</h3>
-                            <p class="text-center text-muted"><a href="/Register">Registrarse</a></p>
                             <hr>
 
                             <form>
                                 <div class="top-margin">
                                     <label>Usuario <span class="text-danger">*</span></label>
-                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Nickname" Required="true" FullWidth="true" Style="font-size: 14px"
+                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.Nickname" Required="true" FullWidth="true" Style="font-size: 14px"
                                                   Placeholder="Usuario" RequiredError="Debe ingresar su usuario" />
                                 </div>
                                 <div class="top-margin">
                                     <label>Contraseña <span class="text-danger">*</span></label>
-                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Password" Required="true" FullWidth="true" Style="font-size: 14px"
-                                                  Placeholder="Password" RequiredError="Debe ingresar su contraseña" />
+                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.Password" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                  Placeholder="Password" RequiredError="Debe ingresar su contraseña"  InputType="InputType.Password"/>
                                 </div>
 
                                 <hr>
 
                                 <div class="row">
                                     <div class="col-lg-12 text-right">
-                                        <MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@Model.LogIn" StartIcon="@Icons.Material.Filled.Check">Ingresar</MudButton>
+                                        <MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(()=>Model.LogIn(NavigationManager))" StartIcon="@Icons.Material.Filled.Check">Ingresar</MudButton>
                                     </div>
                                 </div>
                             </form>
@@ -68,9 +68,6 @@
 
 @code {
 
-    [Parameter]
-    public UserModel User { get => Model.User; set => Model.User = value; }
-
     public LoginViewModel Model { get; set; }
 
     public Login()
@@ -78,13 +75,6 @@
         Model = new(this);
     }
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        Model.User = Model.User ?? new UserModel();
-    }
-
-    
     public void RefreshState() => StateHasChanged();
 
 }
