@@ -1,5 +1,6 @@
 ﻿@using WebStore.Models
 @using System.Diagnostics.CodeAnalysis
+@using WebStore.Data
 
 
 
@@ -9,7 +10,7 @@
 
             <MudCard Elevation="10">
 
-                <MudCardMedia Image="https://1.bp.blogspot.com/-IaCcki7fyt0/YCnYEfuOk4I/AAAAAAAAHio/PjW2O_WtS_wrP6xB42sNbsZsk-grC5IKwCLcBGAsYHQ/s0/Promocion-explora-las-posibilidades-udemy-2021-02.png"
+                <MudCardMedia Image="@Course.Image.ToImage64()"
                               Height="200"/>
               
                 <div class="panel-body">
