@@ -1,109 +1,90 @@
 ﻿@page "/Login"
 @using WebStore.Models
 @using WebStore.Data
+@implements IPage
 <body>
-	<Header/>
+    <Header />
 
-		<div class="container add-padding">
+    <div class="container add-padding">
 
-		<div class="row">
-			
-			<!-- Article main content -->
-			<article class="col-xs-12 maincontent">
-				<header class="page-header">
-					<h1 class="page-title">Sign in</h1>
-				</header>
-				
-				<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<h3 class="thin text-center">Ingresar con tu cuenta</h3>
-							<p class="text-center text-muted"><a href="/Register">Registrarse</a></p>
-							<hr>
-							
-							<form>
-								<div class="top-margin">
-									<label>Usuario <span class="text-danger">*</span></label>
-									 <MudTextField Variant="Variant.Outlined" @bind-Value="@user.Nickname" Required="true" FullWidth="true" Style="font-size: 14px"
-                                          Placeholder="Usuario" RequiredError="Debe ingresar su usuario"  />
-								</div>
-								<div class="top-margin">
-									<label>Contraseña <span class="text-danger">*</span></label>
-									 <MudTextField Variant="Variant.Outlined" @bind-Value="@user.Password" Required="true" FullWidth="true" Style="font-size: 14px"
-                                          Placeholder="Password" RequiredError="Debe ingresar su contraseña"  />
-								</div>
+        <div class="row">
 
-								<hr>
+            <!-- Article main content -->
+            <article class="col-xs-12 maincontent">
+                <header class="page-header">
+                    <h1 class="page-title">Sign in</h1>
+                </header>
 
-								<div class="row">
-										<div class="col-lg-12 text-right">
-										<MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@LogIn" StartIcon="@Icons.Material.Filled.Check">Ingresar</MudButton>
-									</div>
-								</div>
-							</form>
+                <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 class="thin text-center">Ingresar con tu cuenta</h3>
+                            <p class="text-center text-muted"><a href="/Register">Registrarse</a></p>
+                            <hr>
 
-						</div>
-					</div>
-					 <MudPopover Open="@IsOpen" Fixed="true" Class="px-4 pt-4">
+                            <form>
+                                <div class="top-margin">
+                                    <label>Usuario <span class="text-danger">*</span></label>
+                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Nickname" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                  Placeholder="Usuario" RequiredError="Debe ingresar su usuario" />
+                                </div>
+                                <div class="top-margin">
+                                    <label>Contraseña <span class="text-danger">*</span></label>
+                                    <MudTextField Variant="Variant.Outlined" @bind-Value="@Model.User.Password" Required="true" FullWidth="true" Style="font-size: 14px"
+                                                  Placeholder="Password" RequiredError="Debe ingresar su contraseña" />
+                                </div>
+
+                                <hr>
+
+                                <div class="row">
+                                    <div class="col-lg-12 text-right">
+                                        <MudButton Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@Model.LogIn" StartIcon="@Icons.Material.Filled.Check">Ingresar</MudButton>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <MudPopover Open="@Model.IsOpen" Fixed="true" Class="px-4 pt-4">
                         <MudCardHeader Style="font-size: 18px;">
                             Los siguientes campos son incorrectos:
                         </MudCardHeader>
                         <div class="d-flex flex-column">
-                            @foreach (string error in Errors)
+                            @foreach (string error in Model.Errors)
                             {
                                 <MudText Style="font-size: 16px;" Color="Color.Error">@error</MudText>
                             }
-                            <MudButton Style="font-size: 16px;" OnClick="@(() => ToggleOpen(false))" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
+                            <MudButton Style="font-size: 16px;" OnClick="@(() => Model.ToggleOpen(false))" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Close</MudButton>
                         </div>
                     </MudPopover>
-				</div>
-				
-			</article>
-			<!-- /Article -->
+                </div>
 
-		</div>
-	</div>	<!-- /container -->
+            </article>
+            <!-- /Article -->
+
+        </div>
+    </div>	<!-- /container -->
 </body>
 
 @code {
-	[Inject]
-	private MongoDb Db { get; set; }
-	private string[] Errors;
 
-	[Parameter]
-	public UserModel user { get; set; }
+    [Parameter]
+    public UserModel User { get => Model.User; set => Model.User = value; }
 
-	private bool IsOpen;
+    public LoginViewModel Model { get; set; }
 
-	public Login()
-	{
-	}
-
-	protected override void OnParametersSet()
-	{
-		base.OnParametersSet();
-		user = user ?? new UserModel();
-	}
-
-	private async Task LogIn(MouseEventArgs obj)
-	{
-		await Task.Yield();
-		if (user.Validate(out Errors))
-		{
-			if( await user.Find(this.Db))
-			{
-				
-			}
-		}
-        else
-        {
-            ToggleOpen(true);
-        }
-
-    }
-	private void ToggleOpen(bool isOpen)
+    public Login()
     {
-        IsOpen = isOpen;
-        StateHasChanged();
+        Model = new(this);
     }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Model.User = Model.User ?? new UserModel();
+    }
+
+    
+    public void RefreshState() => StateHasChanged();
+
 }

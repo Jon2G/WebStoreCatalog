@@ -1,6 +1,7 @@
 ﻿@page "/Register"
 @using WebStore.Models
 @using WebStore.Data
+@implements IPage
 <body>
     <Header />
     <div class="container add-padding">
@@ -78,19 +79,16 @@
 </body>
 @code {
     [Inject]
-    private MongoDb Db { get; set; }
-   
+    private MongoDb Db { get => Model.Db; set => Model.Db = value; }
 
+    public RegisterViewModel Model { get; set; }
 
     [Parameter]
     public UserModel User { get => Model.User; set => Model.User = value; }
 
- 
-
-    public RegisterViewModel Model { get; set; }
-
     public Register()
     {
+        Model = new RegisterViewModel(this);
     }
 
     protected override void OnParametersSet()
@@ -99,5 +97,6 @@
         Model.User = Model.User ?? new UserModel();
     }
 
+    public void RefreshState() => StateHasChanged();
 
 }
