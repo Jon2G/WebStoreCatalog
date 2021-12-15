@@ -2,47 +2,63 @@
 @using System.Diagnostics.CodeAnalysis
 @using WebStore.Data
 @inject NavigationManager NavigationManager
-<div class="row-cols-3">
-    <div class="col-md-4">
-        <div class="panel panel-default">
+<div class="col-md-4" style="align-items:center">
+    <div class="panel panel-default">
 
-            <MudCard Elevation="10">
+        <MudCard Elevation="10">
 
-                <MudCardMedia Image="@Course.Image.ToImage64()"
-                              Height="200"/>
-              
-                <div class="panel-body">
-                    <article class="col-sm-12 maincontent" style="display: block">
+            <MudCardMedia Image="@Course.Image.ToImage64()"
+                          Height="200" />
 
-                        <label style="color: black; font-size: 18px">@Course.Name</label>
-                        <label style="font-size: 15px">@Course.Description</label>
-                        <MudRating Size="Size.Large" ReadOnly="true" @bind-SelectedValue="Course.Assessment"/>
-                        <br/>
-                        @if (Course.IsFree)
-                        {
-                            <label style="font-size: 18px; color: darkgreen">GRATIS</label>
-                        }
-                        else
-                        {
-                            <div>
-                                <label style="font-size: 18px; color: black">@Course.FinalPrice.ToString("C2")</label>
-                                &nbsp;
-                                @if (Course.HasDiscount)
-                                {
-                                    <label style="font-size: 18px;"><strike>@Course.Price.ToString("C2")</strike></label>
-                                }
-                            </div>
-                        }
-                        @if(AppData.IsLogedIn)
-                        {
-                             <div style="text-align: right;width:220px">
-                             <MudButton StartIcon="@Icons.Material.Filled.Edit" Style="font-size: 18px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Warning" OnClick="@(()=>EditCourse(this.Course))" />
-                             </div>
-                        }
-                    </article>
-                </div>
-            </MudCard>
-        </div>
+            <div class="panel-body">
+                <article class="col-sm-12 maincontent">
+
+                    <label style="color: black; font-size: 16px">@Course.Name</label>
+
+                    @if (Course.Description.Length > 70)
+                    {
+                        <MudExpansionPanels DisableBorders="true" Elevation="0">
+                             <label style="font-size: 15px">@(Course.Description.Substring(0,70))</label>
+                            <MudExpansionPanel Text="Ver más...">
+                                 <label style="font-size: 15px">@(Course.Description.Substring(70))</label>
+                                </MudExpansionPanel>
+                            
+                        </MudExpansionPanels>
+                    }
+                    else
+                    {
+                          <label style="font-size: 15px">@Course.Description</label>
+
+                    }
+
+
+
+                    <MudRating Size="Size.Large" ReadOnly="true" @bind-SelectedValue="Course.Assessment" />
+                    <br />
+                    @if (Course.IsFree)
+                    {
+                        <label style="font-size: 16px; color: darkgreen">GRATIS</label>
+                    }
+                    else
+                    {
+                        <div>
+                            <label style="font-size: 16px; color: black">@Course.FinalPrice.ToString("C2")</label>
+                            &nbsp;
+                            @if (Course.HasDiscount)
+                            {
+                                <label style="font-size: 16px;"><strike>@Course.Price.ToString("C2")</strike></label>
+                            }
+                        </div>
+                    }
+                    @if (AppData.IsLogedIn)
+                    {
+                        <div style="text-align: right;width:220px">
+                            <MudButton StartIcon="@Icons.Material.Filled.Edit" Style="font-size: 16px" Size="Size.Large" Variant="Variant.Filled" Color="Color.Warning" OnClick="@(()=>EditCourse(this.Course))" />
+                        </div>
+                    }
+                </article>
+            </div>
+        </MudCard>
     </div>
 </div>
 @code {

@@ -6,19 +6,21 @@
 <body>
     <Header />
 
-    <div class="container add-padding">
-        <div class="row">
+    <div class="container add-padding"  >
+        <div class="row" >
             <br>
             <!-- Article main content -->
-            <article class="col-xs-12 maincontent">
+           
+            <article  >
                 <header class="page-header">
                     <h1 class="page-title">Cursos</h1>
                 </header>
-
-                @foreach (Course course in Courses)
+                <div class="row">
+                    @foreach (Course course in Courses)
                 {
-                    <CourseView Course="course" />
+                       <CourseView Course="course" />                   
                 }
+                </div>
             </article>
         </div>
     </div>
